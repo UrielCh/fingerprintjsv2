@@ -14,7 +14,8 @@ describe('Sources', () => {
         success2: () => 'baq',
       }
 
-      const components = await getComponents(sources, undefined, [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const components = (await getComponents(sources, undefined, [])) as any
 
       expect(Object.keys(components).sort()).toEqual(['success1', 'success2', 'throwsErrorObject', 'throwsErrorString'])
       expect(components.success1.error).toBeUndefined()
@@ -35,7 +36,8 @@ describe('Sources', () => {
         delayedError: () => new Promise((_resolve, reject) => setTimeout(() => reject('test'), 50)),
       }
 
-      const components = await getComponents(sources, undefined, [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const components = (await getComponents(sources, undefined, [])) as any
 
       expect(components.instant.duration).toBeLessThan(25)
       expect(components.delayedResult.duration).toBeGreaterThan(25)

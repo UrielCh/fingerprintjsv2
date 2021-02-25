@@ -1,7 +1,9 @@
 const path = require('path')
 const jsonPlugin = require('@rollup/plugin-json')
 const nodeResolvePlugin = require('@rollup/plugin-node-resolve').nodeResolve
-const typescriptPlugin = require('@rollup/plugin-typescript')
+//const typescriptPlugin = require('@rollup/plugin-typescript')
+const typescriptPlugin = require('rollup-plugin-typescript2')
+
 const terserPlugin = require('rollup-plugin-terser').terser
 const dtsPlugin = require('rollup-plugin-dts').default
 const licensePlugin = require('rollup-plugin-license')

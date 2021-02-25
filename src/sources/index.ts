@@ -27,14 +27,14 @@ import getErrorFF from './error_ff'
 import getVendor from './vendor'
 import getChrome from './chrome'
 import areCookiesEnabled from './cookies_enabled'
-
+import getGlobalDim from './global_dim'
 /**
  * The list of entropy sources used to make visitor identifiers.
  *
  * This value isn't restricted by Semantic Versioning, i.e. it may be changed without bumping minor or major version of
  * this package.
  */
-export const sources = {
+ export const sources = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   osCpu: getOsCpu,
   languages: getLanguages,
@@ -53,6 +53,7 @@ export const sources = {
   platform: getPlatform,
   plugins: getPlugins,
   canvas: getCanvasFingerprint,
+  globalDim: getGlobalDim,
   // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
   touchSupport: getTouchSupport,
   fonts: getFonts,
@@ -64,6 +65,39 @@ export const sources = {
   vendor: getVendor,
   chrome: getChrome,
   cookiesEnabled: areCookiesEnabled,
+}
+
+export const sourcesLT = {
+  // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
+  /* osCpu*/ oc: getOsCpu,
+  /* languages*/ l: getLanguages,
+  /* colorDepth*/ cd: getColorDepth,
+  /* deviceMemory*/ dm: getDeviceMemory,
+  /* screenResolution*/ sr: getScreenResolution,
+  /* availableScreenResolution*/ asr: getAvailableScreenResolution,
+  /* hardwareConcurrency*/ hc: getHardwareConcurrency,
+  /* timezoneOffset*/ tzo: getTimezoneOffset,
+  /* timezone*/ tz: getTimezone,
+  /* sessionStorage*/ ss: getSessionStorage,
+  /* localStorage*/ ls: getLocalStorage,
+  /* indexedDB*/ idb: getIndexedDB,
+  /* openDatabase*/ od: getOpenDatabase,
+  /* cpuClass*/ cc: getCpuClass,
+  /* platform*/ pl: getPlatform,
+  /* plugins*/ ps: getPlugins,
+  /* canvas*/ cn: getCanvasFingerprint,
+  /* globalDim*/ gd: getGlobalDim,
+  // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
+  /* touchSupport*/ ts: getTouchSupport,
+  /* fonts*/ f: getFonts,
+  /* audio*/ a: getAudioFingerprint,
+  /* pluginsSupport*/ pss: getPluginsSupport,
+  /* productSub*/ prs: getProductSub,
+  /* emptyEvalLength*/ ee: getEmptyEvalLength,
+  /* errorFF*/ ff: getErrorFF,
+  /* vendor*/ v: getVendor,
+  /* chrome*/ c: getChrome,
+  /* cookiesEnabled*/ ce: areCookiesEnabled,
 }
 
 /**
@@ -143,7 +177,7 @@ export async function getComponents<
 ): Promise<Omit<SourcesToComponents<TSources>, TExclude>> {
   let timestamp = Date.now()
   const components = {} as Omit<SourcesToComponents<TSources>, TExclude>
-
+  // iterate entropie provider
   for (const sourceKey of Object.keys(sources) as Array<keyof TSources>) {
     if (!excludes(excludeSources, sourceKey)) {
       continue

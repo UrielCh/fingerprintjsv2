@@ -73,7 +73,7 @@ function doesCurrentBrowserSuspendAudioContext() {
 
 function setAudioParam(context: BaseAudioContext, param: unknown, value: number) {
   const isAudioParam = (value: unknown): value is AudioParam =>
-    value && typeof (value as AudioParam).setValueAtTime === 'function'
+    (value as boolean) && typeof (value as AudioParam).setValueAtTime === 'function'
 
   if (isAudioParam(param)) {
     param.setValueAtTime(value, context.currentTime)
