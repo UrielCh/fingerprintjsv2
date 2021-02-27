@@ -27,14 +27,14 @@ import getErrorFF from './error_ff'
 import getVendor from './vendor'
 import getChrome from './chrome'
 import areCookiesEnabled from './cookies_enabled'
-import getGlobalDim from './global_dim'
+// import getGlobalDim from './global_dim'
 /**
  * The list of entropy sources used to make visitor identifiers.
  *
  * This value isn't restricted by Semantic Versioning, i.e. it may be changed without bumping minor or major version of
  * this package.
  */
- export const sourcesFull = {
+export const sourcesFull = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   osCpu: getOsCpu,
   languages: getLanguages,
@@ -53,7 +53,7 @@ import getGlobalDim from './global_dim'
   platform: getPlatform,
   plugins: getPlugins,
   canvas: getCanvasFingerprint,
-  globalDim: getGlobalDim,
+  // globalDim: getGlobalDim,
   // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
   touchSupport: getTouchSupport,
   fonts: getFonts,
@@ -86,7 +86,7 @@ export const sources = {
   /* platform*/ pl: getPlatform,
   /* plugins*/ ps: getPlugins,
   /* canvas*/ cn: getCanvasFingerprint,
-  /* globalDim*/ gd: getGlobalDim,
+  // /* globalDim*/ gd: getGlobalDim,
   // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
   /* touchSupport*/ ts: getTouchSupport,
   /* fonts*/ f: getFonts,
