@@ -34,7 +34,7 @@ import getGlobalDim from './global_dim'
  * This value isn't restricted by Semantic Versioning, i.e. it may be changed without bumping minor or major version of
  * this package.
  */
- export const sources = {
+ export const sourcesFull = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   osCpu: getOsCpu,
   languages: getLanguages,
@@ -67,7 +67,7 @@ import getGlobalDim from './global_dim'
   cookiesEnabled: areCookiesEnabled,
 }
 
-export const sourcesLT = {
+export const sources = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   /* osCpu*/ oc: getOsCpu,
   /* languages*/ l: getLanguages,
