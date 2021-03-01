@@ -9,24 +9,26 @@ import getGlobalDim from './sources/global_dim'
 
 export function check(url: string): void {
   const start = Date.now()
-  const w = window
   let visits = 0
   const m = location.search.match(/gclid=([^&]+)/)
   const currentGclid = m ? m[1] : ''
   let prevGclid: string | null = ''
   let rnd: string | null = ''
-  if (w.localStorage) {
-    visits = Number(w.localStorage.getItem('c')) + 1
-    w.localStorage.setItem('c', String(visits))
-    rnd = w.localStorage.getItem('rnd')
+  let visitorId: string | null = null
+  if (window.localStorage) {
+    visits = Number(window.localStorage.getItem('c')) + 1
+    window.localStorage.setItem('c', String(visits))
+    rnd = window.localStorage.getItem('rnd')
     if (!rnd) {
       rnd = Math.random().toString(36).substr(2)
-      w.localStorage.setItem('rnd', rnd)
+      window.localStorage.setItem('rnd', rnd)
     }
-    prevGclid = w.localStorage.getItem('g')
-    if (currentGclid) w.localStorage.setItem('g', currentGclid)
+    prevGclid = window.localStorage.getItem('g')
+    if (currentGclid) window.localStorage.setItem('g', currentGclid)
+    visitorId = window.localStorage.getItem('fp')
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function pushArg(arg: string[], k: string, v: any): void {
     const t = typeof v
     if (t === 'undefined') return
@@ -49,11 +51,6 @@ export function check(url: string): void {
     arg.push('sec=' + Math.floor((Date.now() - start) / 1000))
     if (currentGclid) arg.push('cgid=' + currentGclid)
     img.src = url + '?' + arg.join('&')
-    // let u2 = url + '?sec=' + Math.floor((Date.now() - start) / 1000) + '&' + arg.join('&')
-    // if (currentGclid) {
-    //   u2 += 'cgid=' + currentGclid
-    // }
-    // img.src = u2
     document.getElementsByTagName('body')[0].appendChild(img)
   }
 
@@ -64,23 +61,28 @@ export function check(url: string): void {
   if (prevGclid != null) arg0.push('gid=' + prevGclid)
   report(arg0)
 
-  load().then(function (fp) {
-    fp.get({ debug: false }).then(function (result) {
-      const arg: string[] = []
-      for (const k of Object.keys(result.components)) {
-        pushArg(arg, k, (result.components as any)[k].value)
-      }
-      arg.push('v=' + visits)
-      arg.push('fp=' + result.visitorId)
-      if (rnd) arg.push('rnd=' + rnd)
-      report(arg)
+  if (!visitorId)
+    load().then(function (fp) {
+      fp.get({ debug: false }).then(function (result) {
+        const arg: string[] = []
+        for (const k of Object.keys(result.components)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          pushArg(arg, k, (result.components as any)[k].value)
+        }
+        arg.push('v=' + visits)
+        arg.push('fp=' + result.visitorId)
+        if (window.localStorage) {
+          window.localStorage.setItem('fp', result.visitorId)
+        }
+        if (rnd) arg.push('rnd=' + rnd)
+        report(arg)
+      })
     })
-  })
-  let nxt = 2000
+  let nxt = 1000
   const autoreport = function () {
     setTimeout(function () {
       report([])
-      nxt += 2000
+      nxt += 1000
       autoreport()
     }, nxt)
   }
