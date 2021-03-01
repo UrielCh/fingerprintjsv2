@@ -41,9 +41,10 @@ export const sourcesFull = {
   colorDepth: getColorDepth,
   deviceMemory: getDeviceMemory,
   screenResolution: getScreenResolution,
-  availableScreenResolution: getAvailableScreenResolution,
+  // screenFrame: getRoundedScreenFrame,
+  availableScreenResolution: getAvailableScreenResolution, // DROP ?
   hardwareConcurrency: getHardwareConcurrency,
-  timezoneOffset: getTimezoneOffset,
+  timezoneOffset: getTimezoneOffset, // DROP ?
   timezone: getTimezone,
   sessionStorage: getSessionStorage,
   localStorage: getLocalStorage,
@@ -58,7 +59,7 @@ export const sourcesFull = {
   touchSupport: getTouchSupport,
   fonts: getFonts,
   audio: getAudioFingerprint,
-  pluginsSupport: getPluginsSupport,
+  pluginsSupport: getPluginsSupport, // DROP ?
   productSub: getProductSub,
   emptyEvalLength: getEmptyEvalLength,
   errorFF: getErrorFF,
