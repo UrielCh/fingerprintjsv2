@@ -28,9 +28,14 @@ export function check(url: string): void {
     visitorId = window.localStorage.getItem('fp')
   }
 
+  function pushStr(arg: string[], k: string, v: string | null): void {
+    if (v) arg.push(k + '=' + v)
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function pushArg(arg: string[], k: string, v: any): void {
     const t = typeof v
+    if (v === null) return
     if (t === 'undefined') return
     if (t === 'boolean') arg.push(k + '=' + (v ? 1 : 0))
     if (t === 'number') arg.push(k + '=' + v)
@@ -45,20 +50,29 @@ export function check(url: string): void {
       if (v.length) arg.push(k + '=' + v.length)
     }
   }
+  function appendImg(img: HTMLElement) {
+    const body = document.getElementsByTagName('body')
+    if (body.length) {
+      body[0].appendChild(img)
+    } else {
+      setTimeout(appendImg, 250, img)
+    }
+  }
 
   function report(arg: string[]) {
     const img = document.createElement('img')
-    arg.push('sec=' + Math.floor((Date.now() - start) / 1000))
-    if (currentGclid) arg.push('cgid=' + currentGclid)
+    pushArg(arg, 'sec', ((Date.now() - start) / 1000) | 0)
+    pushStr(arg, 'cgid', currentGclid)
     img.src = url + '?' + arg.join('&')
-    document.getElementsByTagName('body')[0].appendChild(img)
+    appendImg(img)
   }
 
   const arg0 = [] as string[]
   pushArg(arg0, 'asr', getAvailableScreenResolution())
   pushArg(arg0, 'sr', getScreenResolution())
   pushArg(arg0, 'gd', getGlobalDim())
-  if (prevGclid != null) arg0.push('gid=' + prevGclid)
+  pushStr(arg0, 'fp', visitorId)
+  pushStr(arg0, 'gid', prevGclid)
   report(arg0)
 
   if (!visitorId)
@@ -69,12 +83,12 @@ export function check(url: string): void {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           pushArg(arg, k, (result.components as any)[k].value)
         }
-        arg.push('v=' + visits)
-        arg.push('fp=' + result.visitorId)
+        pushArg(arg, 'v', visits)
+        pushStr(arg, 'fp', result.visitorId)
         if (window.localStorage) {
           window.localStorage.setItem('fp', result.visitorId)
         }
-        if (rnd) arg.push('rnd=' + rnd)
+        pushStr(arg, 'rnd', rnd)
         report(arg)
       })
     })
