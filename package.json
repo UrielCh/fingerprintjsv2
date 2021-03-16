@@ -45,6 +45,7 @@
         "test:ssr": "node --require './dist/fp.cjs.js' --eval '' || (echo \"The distributive files can't be used with server side rendering. Make sure the code doesn't use browser API until an exported function is called.\" && exit 1)"
     },
     "dependencies": {
+        "shift-refactor": "^2.0.0",
         "tslib": "^2.0.1"
     },
     "devDependencies": {
