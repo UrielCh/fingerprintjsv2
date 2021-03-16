@@ -27,6 +27,13 @@ import getErrorFF from './error_ff'
 import getVendor from './vendor'
 import getChrome from './chrome'
 import areCookiesEnabled from './cookies_enabled'
+import haveWebdriver from './haveWebdriver'
+import haveWebdriverHook from './haveWebdriverHook'
+import haveNotifications from './notifications'
+import webGlInfo from './webgl_info'
+import jsHeapSizeLimit from './jsHeapSizeLimit'
+import performace from './performance'
+import mathPrecision from './mathPrecision'
 // import getGlobalDim from './global_dim'
 /**
  * The list of entropy sources used to make visitor identifiers.
@@ -42,16 +49,16 @@ export const sourcesFull = {
   deviceMemory: getDeviceMemory,
   screenResolution: getScreenResolution,
   // screenFrame: getRoundedScreenFrame,
-  availableScreenResolution: getAvailableScreenResolution, // DROP ?
+  availableScreenResolution: getAvailableScreenResolution, // 0 in fp.min.js
   hardwareConcurrency: getHardwareConcurrency,
-  timezoneOffset: getTimezoneOffset, // DROP ?
-  timezone: getTimezone,
+  timezoneOffset: getTimezoneOffset, // 1 in fp.min.js
+  timezone: getTimezone, // 2 in fp.min.js
   sessionStorage: getSessionStorage,
   localStorage: getLocalStorage,
   indexedDB: getIndexedDB,
   openDatabase: getOpenDatabase,
   cpuClass: getCpuClass,
-  platform: getPlatform,
+  platform: getPlatform, // 5 in fp.min.js
   plugins: getPlugins,
   canvas: getCanvasFingerprint,
   // globalDim: getGlobalDim,
@@ -59,7 +66,7 @@ export const sourcesFull = {
   touchSupport: getTouchSupport,
   fonts: getFonts,
   audio: getAudioFingerprint,
-  pluginsSupport: getPluginsSupport, // DROP ?
+  pluginsSupport: getPluginsSupport, // 4 im fp.min.js
   productSub: getProductSub,
   emptyEvalLength: getEmptyEvalLength,
   errorFF: getErrorFF,
@@ -75,30 +82,37 @@ export const sources = {
   /* colorDepth*/ cd: getColorDepth,
   /* deviceMemory*/ dm: getDeviceMemory,
   /* screenResolution*/ sr: getScreenResolution,
-  /* availableScreenResolution*/ asr: getAvailableScreenResolution,
+  /* availableScreenResolution*/ asr: getAvailableScreenResolution, // 0 in fp.min.js
   /* hardwareConcurrency*/ hc: getHardwareConcurrency,
-  /* timezoneOffset*/ tzo: getTimezoneOffset,
-  /* timezone*/ tz: getTimezone,
+  /* timezoneOffset*/ tzo: getTimezoneOffset, // 1 in fp.min.js
+  /* timezone*/ tz: getTimezone, // 2 in fp.min.js
   /* sessionStorage*/ ss: getSessionStorage,
   /* localStorage*/ ls: getLocalStorage,
   /* indexedDB*/ idb: getIndexedDB,
   /* openDatabase*/ od: getOpenDatabase,
   /* cpuClass*/ cc: getCpuClass,
-  /* platform*/ pl: getPlatform,
+  /* platform*/ pl: getPlatform, // 5 in fp.min.js
   /* plugins*/ ps: getPlugins,
-  /* canvas*/ cn: getCanvasFingerprint,
+  /* canvas*/ cn: getCanvasFingerprint, // 3 in fp.min.js
   // /* globalDim*/ gd: getGlobalDim,
   // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
   /* touchSupport*/ ts: getTouchSupport,
   /* fonts*/ f: getFonts,
   /* audio*/ a: getAudioFingerprint,
-  /* pluginsSupport*/ pss: getPluginsSupport,
+  /* pluginsSupport*/ pss: getPluginsSupport, // 4 im fp.min.js
   /* productSub*/ prs: getProductSub,
   /* emptyEvalLength*/ ee: getEmptyEvalLength,
   /* errorFF*/ ff: getErrorFF,
   /* vendor*/ v: getVendor,
   /* chrome*/ c: getChrome,
   /* cookiesEnabled*/ ce: areCookiesEnabled,
+  wd: haveWebdriver, // 6 in fp.min.js
+  no: haveNotifications, // 7 in fp.min.js
+  wdh: haveWebdriverHook, // 8 in fp.min.js
+  math: mathPrecision, // 24 in fp.min.js
+  perf: performace, // 25 in fp.min.js
+  hsize: jsHeapSizeLimit, // 26 in fp.min.js
+  gl: webGlInfo, // 27 in fp.min.js
 }
 
 /**

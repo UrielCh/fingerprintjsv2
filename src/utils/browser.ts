@@ -169,3 +169,20 @@ export function isWebKit606OrNewer(): boolean {
     ]) >= 3
   )
 }
+
+/**
+ * Warning for package users:
+ * This function is out of Semantic Versioning, i.e. can change unexpectedly. Usage is at your own risk.
+ */
+export function getFullscreenElement(): Element | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = document as any
+  return d.fullscreenElement || d.msFullscreenElement || d.mozFullScreenElement || d.webkitFullscreenElement || null
+}
+
+export function exitFullscreen(): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = document as any
+  // `call` is required because the function throws an error without a proper "this" context
+  return (d.exitFullscreen || d.msExitFullscreen || d.mozCancelFullScreen || d.webkitExitFullscreen).call(d)
+}

@@ -608,7 +608,7 @@ export function isChromium() {
                         return a(this, function(t) {
                             switch (t.label) {
                                 case 0:
-                                    return F((e = screenInfoPro())) ?
+                                    return F((e = getCurrentScreenFrame())) ?
                                         D ? [2, u(D)] :
                                         S() ? [
                                             4,
@@ -621,7 +621,7 @@ export function isChromium() {
                                                 ).call(n)),
                                         ] : [3, 2] : [3, 2]
                                 case 1:
-                                    t.sent(), (e = screenInfoPro()), (t.label = 2)
+                                    t.sent(), (e = getCurrentScreenFrame()), (t.label = 2)
                                 case 2:
                                     return F(e) || (D = e), [2, e]
                             }
@@ -630,13 +630,13 @@ export function isChromium() {
                     })
                 }
 
-                function screenInfoPro() {
-                    var e = screen
+                function getCurrentScreenFrame() {
+                    var s = screen
                     return [
-                        replaceNaN(toFloat(e.availTop), null),
-                        replaceNaN(toFloat(e.width) - toFloat(e.availWidth) - replaceNaN(toFloat(e.availLeft), 0), null),
-                        replaceNaN(toFloat(e.height) - toFloat(e.availHeight) - replaceNaN(toFloat(e.availTop), 0), null),
-                        replaceNaN(toFloat(e.availLeft), null),
+                        replaceNaN(toFloat(s.availTop), null),
+                        replaceNaN(toFloat(s.width) - toFloat(s.availWidth) - replaceNaN(toFloat(s.availLeft), 0), null),
+                        replaceNaN(toFloat(s.height) - toFloat(s.availHeight) - replaceNaN(toFloat(s.availTop), 0), null),
+                        replaceNaN(toFloat(s.availLeft), null),
                     ]
                 }
 
@@ -1105,7 +1105,7 @@ export function isChromium() {
                         !(function() {
                             if (void 0 === L) {
                                 !(function e() {
-                                    var t = screenInfoPro()
+                                    var t = getCurrentScreenFrame()
                                     F(t) ? (L = setTimeout(e, 2500)) : ((D = t), (L = void 0))
                                 })()
                             }
@@ -3763,6 +3763,7 @@ export function isChromium() {
 
 
 
+
                 var webGlExtWhiteList = [
                         'MAX_TEXTURE_MAX_ANISOTROPY_EXT',
                         'FRAGMENT_SHADER_DERIVATIVE_HINT_OES',
@@ -3860,21 +3861,26 @@ export function isChromium() {
                         7937,
                         7938,
                     ],
-                    _t = ['FRAGMENT_SHADER', 'VERTEX_SHADER'],
-                    St = ['LOW_FLOAT', 'MEDIUM_FLOAT', 'HIGH_FLOAT', 'LOW_INT', 'MEDIUM_INT', 'HIGH_INT']
+                    specialWebGLElms = ['FRAGMENT_SHADER', 'VERTEX_SHADER'],
+                    webGlprecisions = ['LOW_FLOAT', 'MEDIUM_FLOAT', 'HIGH_FLOAT', 'LOW_INT', 'MEDIUM_INT', 'HIGH_INT']
 
-                function xt(e, t, n) {
-                    var r = e.getShaderPrecisionFormat(e[t], e[n])
+                function mygetShaderPrecisionFormat(webGLRenderingContext, shaderType, precisionType) {
+                    var r = webGLRenderingContext.getShaderPrecisionFormat(webGLRenderingContext[shaderType], webGLRenderingContext[precisionType])
                     return r ? [r.rangeMin, r.rangeMax, r.precision] : []
                 }
 
-                function isValidprotoKey(e) {
-                    return 'string' == typeof e && !e.match(/[^A-Z0-9_x]/)
+                function isValidprotoKey(propname) {
+                    return 'string' == typeof propname && !propname.match(/[^A-Z0-9_x]/)
                 }
 
-                function getProtoFilteredKeys(e) {
-                    return Object.keys(e.__proto__).filter(isValidprotoKey)
+                function getProtoFilteredKeys(object) {
+                    return Object.keys(object.__proto__).filter(isValidprotoKey)
                 }
+
+
+
+
+                
                 var It,
                     At = function() {
                         return 0
@@ -4004,23 +4010,23 @@ export function isChromium() {
                     )
                 }
                 var nn =
-                    (((It = {})[0] = function() {
+                    (((It = {})[0] = function() { // available_screen_resolution.ts
                             var e = screen
                             if (e.availWidth && e.availHeight) {
                                 var t = [0 | e.availWidth, 0 | e.availHeight]
                                 return t.sort().reverse(), t
                             }
                         }),
-                        (It[1] = function() {
+                        (It[1] = function() { // timezonOffset
                             var e = new Date().getFullYear()
                             return Math.max(+new Date(e, 0, 1).getTimezoneOffset(), +new Date(e, 6, 1).getTimezoneOffset())
                         }),
-                        (It[2] = function() {
+                        (It[2] = function() { // timezone.ts
                             var e,
                                 t = null === (e = window.Intl) || void 0 === e ? void 0 : e.DateTimeFormat
                             if (t) return new t().resolvedOptions().timeZone
-                        }),
-                        (It[3] = function() {
+                        }), 
+                        (It[3] = function() { // canvas.ts
                             var e = (function() {
                                     var e = document.createElement('canvas')
                                     return (e.width = 240), (e.height = 140), (e.style.display = 'inline'), [e, e.getContext('2d')]
@@ -4072,10 +4078,10 @@ export function isChromium() {
                                 }
                             )
                         }),
-                        (It[4] = function() {
+                        (It[4] = function() { // plugins_support.ts
                             return void 0 !== navigator.plugins
                         }),
-                        (It[5] = function() {
+                        (It[5] = function() { // plateforme.ts
                             return navigator.platform
                         }),
                         (It[6] = function() {
@@ -4092,38 +4098,38 @@ export function isChromium() {
                                                 e.query({
                                                     name: 'notifications',
                                                 }),
-                                            ] : [2, void 0]
+                                            ] : [2, undefined]
                                         case 1:
                                             return (
                                                 (t = n.sent()),
-                                                'undefined' == typeof Notification ? [2, void 0] : [2, 'denied' === Notification.permission && 'prompt' === t.state]
+                                                'undefined' == typeof Notification ? [2, undefined] : [2, 'denied' === Notification.permission && 'prompt' === t.state]
                                             )
                                     }
                                 })
                             })
                         }),
                         (It[8] = function() {
-                            var e = window,
-                                t = document,
-                                n = t.documentElement
+                            var wind = window,
+                                docu = document,
+                                documentElement = docu.documentElement
                             return (
-                                'webdriver' in e ||
-                                '_Selenium_IDE_Recorder' in e ||
-                                'callSelenium' in e ||
-                                '_selenium' in e ||
-                                '__webdriver_script_fn' in t ||
-                                '__driver_evaluate' in t ||
-                                '__webdriver_evaluate' in t ||
-                                '__selenium_evaluate' in t ||
-                                '__fxdriver_evaluate' in t ||
-                                '__driver_unwrapped' in t ||
-                                '__webdriver_unwrapped' in t ||
-                                '__selenium_unwrapped' in t ||
-                                '__fxdriver_unwrapped' in t ||
-                                '__webdriver_script_func' in t ||
-                                null !== n.getAttribute('selenium') ||
-                                null !== n.getAttribute('webdriver') ||
-                                null !== n.getAttribute('driver')
+                                'webdriver' in wind ||
+                                '_Selenium_IDE_Recorder' in wind ||
+                                'callSelenium' in wind ||
+                                '_selenium' in wind ||
+                                '__webdriver_script_fn' in docu ||
+                                '__driver_evaluate' in docu ||
+                                '__webdriver_evaluate' in docu ||
+                                '__selenium_evaluate' in docu ||
+                                '__fxdriver_evaluate' in docu ||
+                                '__driver_unwrapped' in docu ||
+                                '__webdriver_unwrapped' in docu ||
+                                '__selenium_unwrapped' in docu ||
+                                '__fxdriver_unwrapped' in docu ||
+                                '__webdriver_script_func' in docu ||
+                                null !== documentElement.getAttribute('selenium') ||
+                                null !== documentElement.getAttribute('webdriver') ||
+                                null !== documentElement.getAttribute('driver')
                             )
                         }),
                         (It[9] = function(e) {
@@ -4482,6 +4488,8 @@ export function isChromium() {
                                 })
                             })
                         }),
+                        
+                        // DONE
                         (It[28] = function() {
                             var canvasElement = document.createElement('canvas');
                             var webgl_names = ['webgl', 'experimental-webgl'];
@@ -4512,36 +4520,36 @@ export function isChromium() {
                                             {
                                                 // "UNMASKED_VENDOR_WEBGL", "UNMASKED_RENDERER_WEBGL"
                                                 for (var p = 0, keyList = getProtoFilteredKeys(gl); p < keyList.length; p++) {
-                                                    var g = gl[(_ = keyList[p])]
-                                                    if (webGlVendorList1.indexOf(g) > -1)
-                                                        parametersList.push(_ + '(' + g + ')=' + gl.getParameter(g)); // id + name
+                                                    var ggggggg = gl[(_ = keyList[p])]
+                                                    if (webGlVendorList1.indexOf(ggggggg) > -1)
+                                                        parametersList.push(_ + '(' + ggggggg + ')=' + gl.getParameter(ggggggg)); // id + name
                                                     else
-                                                        parametersList.push(_ + '=' + g)
+                                                        parametersList.push(_ + '=' + ggggggg)
                                                 }
                                             }
 
-                                            const webGlSupportedExtensions = gl.getSupportedExtensions();
-                                            if (webGlSupportedExtensions)
-                                                for (var b = 0, w = webGlSupportedExtensions; b < w.length; b++) {
+                                            const isSupportedExtensions = gl.getSupportedExtensions();
+                                            if (isSupportedExtensions)
+                                                for (var b = 0, w = isSupportedExtensions; b < w.length; b++) {
                                                     var y = w[b],
                                                         k = gl.getExtension(y)
                                                     if (k) {
                                                         const keys = getProtoFilteredKeys(k)
                                                         for (var E = 0; E < keys.length; E++) {
                                                             var _ = keys[E];
-                                                            g = k[_];
+                                                            ggggggg = k[_];
                                                             if (webGlExtWhiteList.indexOf(_) > 0)
-                                                               extensionParametersList.push(_ + '(' + g + ')=' + gl.getParameter(g));
+                                                               extensionParametersList.push(_ + '(' + ggggggg + ')=' + gl.getParameter(ggggggg));
                                                             else
-                                                                extensionParametersList.push(_ + '=' + g)
+                                                                extensionParametersList.push(_ + '=' + ggggggg)
                                                         }
                                                     }
                                                 }
 
-                                            for (var S = 0, x = _t; S < x.length; S++)
-                                                for (var T = x[S], C = 0, I = St; C < I.length; C++) {
+                                            for (var S = 0, x = specialWebGLElms; S < x.length; S++)
+                                                for (var T = x[S], C = 0, I = webGlprecisions; C < I.length; C++) {
                                                     var A = I[C],
-                                                        O = xt(gl, T, A)
+                                                        O = mygetShaderPrecisionFormat(gl, T, A)
                                                     shaderPrecisionsList.push(T + '.' + A + '=' + O.join(','))
                                                 }
                                             extensionParametersList.sort();
@@ -4566,7 +4574,7 @@ export function isChromium() {
                                                     contextAttributes: contextAttributesList.join('&'),
                                                     parameters: parametersList.join('&'),
                                                     shaderPrecisions: shaderPrecisionsList.join('&'),
-                                                    extensions: webGlSupportedExtensions ? webGlSupportedExtensions.join(',') : '',
+                                                    extensions: isSupportedExtensions ? isSupportedExtensions.join(',') : '',
                                                     extensionParameters: extensionParametersList.join(','),
                                                 }
                                         })(webgl),
