@@ -14,11 +14,12 @@ export function check(url: string): void {
   const currentGclid = m ? m[1] : ''
   let prevGclid: string | null = ''
   let rnd: string | null = ''
+  let oldrnd: string | null = null
   let visitorId: string | null = null
   if (window.localStorage) {
     visits = Number(window.localStorage.getItem('c')) + 1
     window.localStorage.setItem('c', String(visits))
-    rnd = window.localStorage.getItem('rnd')
+    oldrnd = rnd = window.localStorage.getItem('rnd')
     if (!rnd) {
       rnd = Math.random().toString(36).substr(2)
       window.localStorage.setItem('rnd', rnd)
@@ -29,7 +30,9 @@ export function check(url: string): void {
   }
 
   function pushStr(arg: string[], k: string, v: string | null): void {
-    if (v) arg.push(k + '=' + v)
+    if (!v) return
+    if (v.length > 50) v = v.substr(0, 50)
+    arg.push(k + '=' + v)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,9 +78,10 @@ export function check(url: string): void {
   pushStr(arg0, 'gid', prevGclid)
   report(arg0)
 
-  if (!visitorId)
+  // eslint-disable-next-line no-constant-condition
+  if (!oldrnd)
     load().then(function (fp) {
-      fp.get({ debug: false }).then(function (result) {
+      fp.get().then(function (result) {
         const arg: string[] = []
         for (const k of Object.keys(result.components)) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,6 +93,13 @@ export function check(url: string): void {
           window.localStorage.setItem('fp', result.visitorId)
         }
         pushStr(arg, 'rnd', rnd)
+        const gl = result.components.gl.value
+        if (gl) {
+          pushStr(arg, 'glv', gl.vendor)
+          pushStr(arg, 'glvu', gl.vendorUnmasked)
+          pushStr(arg, 'glr', gl.renderer)
+          pushStr(arg, 'glru', gl.rendererUnmasked)
+        }
         report(arg)
       })
     })
