@@ -2763,7 +2763,7 @@ export function isChromium() {
                                                 o = e.visitorId,
                                                 a = e.tag,
                                                 u = e.ipResolution,
-                                                s = e.extendedResult,
+                                                extendedResult = e.extendedResult,
                                                 c = e.linkedId,
                                                 l = e.tls,
                                                 d = e.tlsError,
@@ -2786,7 +2786,7 @@ export function isChromium() {
                                                         void 0
                                                 })(a)),
                                                 (t.i = v),
-                                                (t.cbd = s ? 1 : void 0),
+                                                (t.cbd = extendedResult ? 1 : void 0),
                                                 (t.lid = c),
                                                 (t.cr = document.referrer || void 0),
                                                 (t.j = l),
@@ -4696,7 +4696,7 @@ export function isChromium() {
                         v = i.storageKey,
                         h = void 0 === v ? '_vid' : v,
                         p = i.debug,
-                        m = function(e, t, n, i, c, v, p) {
+                        m = function(e, t, n, i, extendedResult, v, p) {
                             return o(u, void 0, void 0, function() {
                                 var o, u, m, w
                                 return a(this, function(a) {
@@ -4717,7 +4717,7 @@ export function isChromium() {
                                                             tag: e,
                                                             visitorId: sn(h),
                                                             linkedId: t,
-                                                            extendedResult: c,
+                                                            extendedResult: extendedResult,
                                                             ipResolution: v,
                                                         }),
                                                         p,
