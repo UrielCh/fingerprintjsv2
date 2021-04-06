@@ -1,4 +1,4 @@
-const path = require('path')
+// const path = require('path')
 const jsonPlugin = require('@rollup/plugin-json')
 const nodeResolvePlugin = require('@rollup/plugin-node-resolve').nodeResolve
 //const typescriptPlugin = require('@rollup/plugin-typescript')
@@ -6,18 +6,18 @@ const typescriptPlugin = require('rollup-plugin-typescript2')
 
 const terserPlugin = require('rollup-plugin-terser').terser
 const dtsPlugin = require('rollup-plugin-dts').default
-const licensePlugin = require('rollup-plugin-license')
+// const licensePlugin = require('rollup-plugin-license')
 const { dependencies } = require('./package.json')
 
 const outputDirectory = 'dist'
 
-const commonBanner = licensePlugin({
-  banner: {
-    content: {
-      file: path.join(__dirname, 'resources', 'license_banner.txt'),
-    },
-  },
-})
+// const commonBanner = licensePlugin({
+//   banner: {
+//     content: {
+//       file: path.join(__dirname, 'resources', 'license_banner.txt'),
+//     },
+//   },
+// })
 
 const commonInput = {
   input: './src/index.ts',
@@ -27,12 +27,12 @@ const commonInput = {
     typescriptPlugin({
       declaration: false,
     }),
-    commonBanner,
+    // commonBanner,
   ],
 }
 
 const commonOutput = {
-  name: 'FingerprintJS',
+  name: 'fjs', // FingerprintJS
   exports: 'named',
 }
 
@@ -95,7 +95,7 @@ module.exports = [
   // TypeScript definition
   {
     ...commonInput,
-    plugins: [dtsPlugin(), commonBanner],
+    plugins: [dtsPlugin() /*, commonBanner */],
     output: {
       file: `${outputDirectory}/fp.d.ts`,
       format: 'es',

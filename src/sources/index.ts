@@ -41,7 +41,7 @@ import mathPrecision from './mathPrecision'
  * This value isn't restricted by Semantic Versioning, i.e. it may be changed without bumping minor or major version of
  * this package.
  */
-export const sourcesFull = {
+export const sources = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   osCpu: getOsCpu,
   languages: getLanguages,
@@ -73,9 +73,16 @@ export const sourcesFull = {
   vendor: getVendor,
   chrome: getChrome,
   cookiesEnabled: areCookiesEnabled,
+  webDriver: haveWebdriver, // 6 in fp.min.js
+  notification: haveNotifications, // 7 in fp.min.js
+  webDriverHook: haveWebdriverHook, // 8 in fp.min.js
+  math: mathPrecision, // 24 in fp.min.js
+  perf: performace, // 25 in fp.min.js
+  heapsize: jsHeapSizeLimit, // 26 in fp.min.js
+  webGL: webGlInfo, // 27 in fp.min.js
 }
 
-export const sources = {
+export const sourcesLt = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   /* osCpu*/ oc: getOsCpu,
   /* languages*/ l: getLanguages,

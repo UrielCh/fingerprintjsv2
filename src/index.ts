@@ -6,8 +6,10 @@ import { isTrident, isEdgeHTML, isChromium, isWebKit, isGecko, isDesktopSafari }
 import getAvailableScreenResolution from './sources/available_screen_resolution'
 import getScreenResolution from './sources/screen_resolution'
 import getGlobalDim from './sources/global_dim'
+import getTouchSupport from './sources/touch_support'
 
-export function check(url: string): void {
+//ls -l dist/fp.min.js
+export function check(url?: string, cb?: (result: { [key: string]: string }) => void, force?: boolean): void {
   const start = Date.now()
   let visits = 0
   const m = location.search.match(/gclid=([^&]+)/)
@@ -16,6 +18,7 @@ export function check(url: string): void {
   let rnd: string | null = ''
   let oldrnd: string | null = null
   let visitorId: string | null = null
+  const telemetry = {} as { [key: string]: string }
   if (window.localStorage) {
     visits = Number(window.localStorage.getItem('c')) + 1
     window.localStorage.setItem('c', String(visits))
@@ -31,8 +34,9 @@ export function check(url: string): void {
 
   function pushStr(arg: string[], k: string, v: string | null): void {
     if (!v) return
-    if (v.length > 50) v = v.substr(0, 50)
+    if (v.length > 120) v = v.substr(0, 120)
     arg.push(k + '=' + v)
+    telemetry[k] = v
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,17 +44,17 @@ export function check(url: string): void {
     const t = typeof v
     if (v === null) return
     if (t === 'undefined') return
-    if (t === 'boolean') arg.push(k + '=' + (v ? 1 : 0))
-    if (t === 'number') arg.push(k + '=' + v)
+    if (t === 'boolean') pushStr(arg, k, v ? '1' : '0')
+    if (t === 'number') pushStr(arg, k, '' + v)
     if (t === 'object') {
       if (v.length && typeof v[0] === 'number') {
-        arg.push(k + '=' + v.join(','))
+        pushStr(arg, k, v.join(','))
         return
       }
-      if (v.maxTouchPoints) arg.push('mt=' + v.maxTouchPoints)
-      if (v.touchEvent) arg.push('te=1')
-      if (v.touchStart) arg.push('ts=1')
-      if (v.length) arg.push(k + '=' + v.length)
+      if (v.maxTouchPoints) pushStr(arg, 'mt', '' + v.maxTouchPoints)
+      if (v.touchEvent) pushStr(arg, 'te', '1')
+      if (v.touchStart) pushStr(arg, 'ts', '1')
+      if (v.length) pushStr(arg, k, '' + v.length)
     }
   }
   function appendImg(img: HTMLElement) {
@@ -63,27 +67,33 @@ export function check(url: string): void {
   }
 
   function report(arg: string[]) {
-    const img = document.createElement('img')
-    pushArg(arg, 'sec', ((Date.now() - start) / 1000) | 0)
-    pushStr(arg, 'cgid', currentGclid)
-    img.src = url + '?' + arg.join('&')
-    appendImg(img)
+    if (url) {
+      const img = document.createElement('img')
+      pushArg(arg, 'sec', ((Date.now() - start) / 1000) | 0)
+      pushStr(arg, 'cgid', currentGclid)
+      img.src = url + '?' + arg.join('&')
+      appendImg(img)
+    }
   }
 
   const arg0 = [] as string[]
   pushArg(arg0, 'asr', getAvailableScreenResolution())
   pushArg(arg0, 'sr', getScreenResolution())
   pushArg(arg0, 'gd', getGlobalDim())
+  pushArg(arg0, 'dpr', window.devicePixelRatio)
+  pushArg(arg0, 'hc', navigator.hardwareConcurrency)
+  pushArg(arg0, '', getTouchSupport())
   pushStr(arg0, 'fp', visitorId)
   pushStr(arg0, 'gid', prevGclid)
   report(arg0)
 
   // eslint-disable-next-line no-constant-condition
-  if (!oldrnd)
+  if (force || !oldrnd)
     load().then(function (fp) {
       fp.get().then(function (result) {
         const arg: string[] = []
         for (const k of Object.keys(result.components)) {
+          if (k === 'ts') continue
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           pushArg(arg, k, (result.components as any)[k].value)
         }
@@ -93,7 +103,7 @@ export function check(url: string): void {
           window.localStorage.setItem('fp', result.visitorId)
         }
         pushStr(arg, 'rnd', rnd)
-        const gl = result.components.gl.value
+        const gl = result.components.webGL.value
         if (gl) {
           pushStr(arg, 'glv', gl.vendor)
           pushStr(arg, 'glvu', gl.vendorUnmasked)
@@ -101,6 +111,7 @@ export function check(url: string): void {
           pushStr(arg, 'glru', gl.rendererUnmasked)
         }
         report(arg)
+        if (cb) cb(telemetry)
       })
     })
   let nxt = 1000
@@ -108,7 +119,7 @@ export function check(url: string): void {
     setTimeout(function () {
       report([])
       nxt += 1000
-      autoreport()
+      if (nxt < 20000) autoreport()
     }, nxt)
   }
   autoreport()
