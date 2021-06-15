@@ -8,7 +8,6 @@ import getScreenResolution from './sources/screen_resolution'
 import getGlobalDim from './sources/global_dim'
 import getTouchSupport from './sources/touch_support'
 
-//ls -l dist/fp.min.js
 export function check(url?: string, cb?: (result: { [key: string]: string }) => void, force?: boolean): void {
   const start = Date.now()
   let visits = 0
@@ -85,6 +84,7 @@ export function check(url?: string, cb?: (result: { [key: string]: string }) => 
   pushArg(arg0, '', getTouchSupport())
   pushStr(arg0, 'fp', visitorId)
   pushStr(arg0, 'gid', prevGclid)
+  pushStr(arg0, 'rnd', rnd)
   report(arg0)
 
   // eslint-disable-next-line no-constant-condition
