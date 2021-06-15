@@ -34,6 +34,16 @@ import webGlInfo from './webgl_info'
 import jsHeapSizeLimit from './jsHeapSizeLimit'
 import performace from './performance'
 import mathPrecision from './mathPrecision'
+import { getRoundedScreenFrame } from './screem_frame'
+import getVendorFlavors from './vendor_flavors'
+import getColorGamut from './color_gamut'
+import areColorsInverted from './inverted_colors'
+import areColorsForced from './forced_colors'
+import getMonochromeDepth from './monochrome'
+import getContrastPreference from './contrast'
+import isMotionReduced from './reduced_motion'
+import isHDR from './hdr'
+import getFontPreferences from './font_preferences'
 // import getGlobalDim from './global_dim'
 /**
  * The list of entropy sources used to make visitor identifiers.
@@ -44,11 +54,12 @@ import mathPrecision from './mathPrecision'
 export const sources = {
   // Expected errors and default values must be handled inside the functions. Unexpected errors must be thrown.
   osCpu: getOsCpu,
+  fontPreferences: getFontPreferences, // NEW
   languages: getLanguages,
   colorDepth: getColorDepth,
   deviceMemory: getDeviceMemory,
   screenResolution: getScreenResolution,
-  // screenFrame: getRoundedScreenFrame,
+  screenFrame: getRoundedScreenFrame, // NEW/BACK
   availableScreenResolution: getAvailableScreenResolution, // 0 in fp.min.js
   hardwareConcurrency: getHardwareConcurrency,
   timezoneOffset: getTimezoneOffset, // 1 in fp.min.js
@@ -64,7 +75,17 @@ export const sources = {
   // globalDim: getGlobalDim,
   // adBlock: isAdblockUsed, // https://github.com/fingerprintjs/fingerprintjs/issues/405
   touchSupport: getTouchSupport,
-  fonts: getFonts,
+  colorGamut: getColorGamut, // NEW
+  invertedColors: areColorsInverted, // NEW
+  forcedColors: areColorsForced, // NEW
+  monochrome: getMonochromeDepth, // NEW
+  contrast: getContrastPreference, // NEW
+  reducedMotion: isMotionReduced, // NEW
+  hdr: isHDR, // NEW
+  fonts: getFonts, // ok
+  // domBlockers: getDomBlockers, // NEW
+  // fontPreferences: getFontPreferences, // NEW
+
   audio: getAudioFingerprint,
   pluginsSupport: getPluginsSupport, // 4 im fp.min.js
   productSub: getProductSub,
@@ -76,10 +97,11 @@ export const sources = {
   webDriver: haveWebdriver, // 6 in fp.min.js
   notification: haveNotifications, // 7 in fp.min.js
   webDriverHook: haveWebdriverHook, // 8 in fp.min.js
-  math: mathPrecision, // 24 in fp.min.js
+  math: mathPrecision, // 24 in fp.min.js called getMathFingerprint in fj.js
   perf: performace, // 25 in fp.min.js
   heapsize: jsHeapSizeLimit, // 26 in fp.min.js
   webGL: webGlInfo, // 27 in fp.min.js
+  vendorFlavors: getVendorFlavors,
 }
 
 export const sourcesLt = {
