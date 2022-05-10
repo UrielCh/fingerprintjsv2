@@ -227,7 +227,7 @@ export async function getComponents<
       continue
     }
 
-    let result: Pick<Component<unknown>, 'value' | 'error'>
+    let result: Pick<Component<unknown>, 'value' | 'error'> | any
 
     try {
       result = { value: await sources[sourceKey](sourceOptions) }

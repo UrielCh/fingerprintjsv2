@@ -22,8 +22,8 @@ export default function getTouchSupport(): TouchSupport {
   let touchEvent: boolean
   if (n.maxTouchPoints !== undefined) {
     maxTouchPoints = toInt(n.maxTouchPoints)
-  } else if (n.msMaxTouchPoints !== undefined) {
-    maxTouchPoints = n.msMaxTouchPoints
+  } else if ((n as any).msMaxTouchPoints !== undefined) {
+    maxTouchPoints = (n as any).msMaxTouchPoints
   }
   try {
     document.createEvent('TouchEvent')

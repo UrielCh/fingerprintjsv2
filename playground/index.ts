@@ -1,5 +1,5 @@
 import 'promise-polyfill/src/polyfill'
-import * as FingerprintJS from '../src'
+import * as FingerprintJS from '../src/index'
 import { errorToObject } from '../src/utils/misc'
 
 async function getVisitorData() {
@@ -32,7 +32,7 @@ ${FingerprintJS.componentsToDebugString(components)}
 \`\`\``)
   } catch (error) {
     const totalTime = Date.now() - startTime
-    const errorData = errorToObject(error)
+    const errorData = errorToObject(error as any)
     output.innerHTML = ''
     addOutputSection(output, 'Unexpected error:', JSON.stringify(errorData, null, 2))
     addOutputSection(output, 'Time passed before the error:', `${totalTime}ms`, 'big')

@@ -1,5 +1,5 @@
 import { isChromium, isWebKit } from '../utils/browser'
-import { withIframe } from '../utils/dom'
+// import { withIframe } from '../utils/dom'
 
 type WritableCSSProperties = {
   [K in keyof CSSStyleDeclaration]: CSSStyleDeclaration[K] extends string ? K : never
@@ -138,6 +138,7 @@ function withNaturalFonts<T>(
    * - IE 11, Edge 18: offsetWidth = 100% reliable;
    * - IE 11, Edge 18: getBoundingClientRect = 100% reliable;
    */
+  // @ts-ignore
   return withIframe((_: any, iframeWindow: any) => {
     const iframeDocument = iframeWindow.document
     const iframeBody = iframeDocument.body

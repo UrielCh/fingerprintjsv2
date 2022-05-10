@@ -3,6 +3,7 @@ export default function getErrorFF(): boolean {
     throw 'a'
   } catch (e) {
     try {
+      // @ts-ignore
       e.toSource()
       return true
     } catch (e2) {

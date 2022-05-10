@@ -56,6 +56,7 @@ export default async function getAudioFingerprint(): Promise<number> {
   try {
     buffer = await renderAudio(context)
   } catch (error) {
+    // @ts-ignore
     if (error.name === InnerErrorName.Timeout || error.name === InnerErrorName.Suspended) {
       return SpecialFingerprint.Timeout
     }

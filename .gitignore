@@ -12,3 +12,8 @@
 .idea/
 .vscode/
 pro/node_modules/
+src/sources/*.js
+src/utils/*.js
+tests/*.js
+src/*.js
+playground/*.js

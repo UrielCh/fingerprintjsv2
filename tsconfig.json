@@ -3,6 +3,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "es5",
+    "lib": ["es2016", "dom", "es5"],
     "removeComments": false,
     "resolveJsonModule": true,
     "importHelpers": true,
