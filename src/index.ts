@@ -37,7 +37,7 @@ export function check(url: string, tkn: string, cb: (resp: any) => any, force = 
   function pushStr(arg: string[], k: string, v: string | null): void {
     if (!v) return
     if (v.length > 120) v = v.substr(0, 120)
-    arg.push(k + '=' + v)
+    arg.push(k + '=' + encodeURI(v))
     telemetry[k] = v
   }
 
@@ -82,9 +82,9 @@ export function check(url: string, tkn: string, cb: (resp: any) => any, force = 
       url += arg.join('&')
       const d = url.replace(/[^?]+/, '')
       // @ts-ignore
-      url += '&tk' + md4(tkn + d)
+      url += '&tk=' + md4(tkn + d)
       // @ts-ignore
-      jQuery.post(url, { action: 'add_finger' }, { url, success: cb })
+      jQuery.post(url, { action: 'add_finger' }, cb)
     }
   }
 
