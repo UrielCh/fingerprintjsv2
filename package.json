@@ -34,6 +34,7 @@
     "scripts": {
         "clean": "rimraf src/**/*.js playground/index.js tests/utils.js",
         "build": "rimraf dist && rollup -c",
+        "rollup": "rollup -c",
         "build:watch": "yarn build --watch",
         "playground:start": "cd playground && webpack-dev-server --mode development",
         "playground:build": "cd playground && webpack --mode production",
